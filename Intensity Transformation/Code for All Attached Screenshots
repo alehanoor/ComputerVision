@@ -1,0 +1,101 @@
+%---------------------------Intensity Transformation--------------------------------------------%
+
+%---------------------------1. Image Negative Transformation------------------------------------%
+% Read the image
+f = imread('xray.jpg');
+
+% Compute the image negative
+g = imcomplement(f);
+
+% Display the Original Image
+subplot(1, 2, 1); 
+imshow(f);
+title('Original Image');
+
+% Display the Image Negative
+subplot(1, 2, 2); 
+imshow(g);
+title('Image Negative');
+
+%---------------------------2. Power-Law Transformation (Gamma Correction)----------------------%
+% Read the image
+f = imread('xray.jpg');
+
+% Apply power-law (gamma) transformation with gamma = 0.5
+% Syntax: g = imadjust(f, [low_in high_in], [low_out high_out], gamma);
+g = imadjust(f, [], [], 0.5);
+
+% Display the original image
+subplot(1, 2, 1); 
+imshow(f);
+title('Original Image');
+
+% Display the Gamma-corrected image
+subplot(1, 2, 2); 
+imshow(g);
+title('Gamma Corrected Image');
+
+%---------------------------3. Logarithmic Transformation---------------------------------------%
+% Read the input image
+f = imread('spectrum.png');
+
+% Apply logarithmic transformation (c = 1)
+g = im2uint8(mat2gray(log(1 + double(f))));
+
+% Display the original image
+subplot(1, 2, 1); 
+imshow(f);
+title('Original Image');
+
+% Display the log-transformed image
+subplot(1, 2, 2); 
+imshow(g);
+title('Logarithmic Transformation');
+
+%---------------------------4. Contrast Stretching----------------------------------------------%
+% Read the input image
+f = imread('pollen.png');
+
+% Convert the image to double precision for accurate calculations
+fd = im2double(f);
+
+% Compute the mean intensity value of the image
+m = mean2(fd);
+
+% Apply the contrast-stretching transformation 
+g = 1 ./ (1 + (m ./ (fd + eps)).^4);
+
+% Display the original image
+subplot(1, 2, 1);
+imshow(f);
+title('Original Image');
+
+% Display the Contrast-Stretched Image
+subplot(1, 2, 2);
+imshow(g);
+title('Contrast-Stretched Image');
+
+%---------------------------Exercise Question Solution------------------------------------------%
+% Read the input image
+f = imread('liftingbody.png');
+% Convert the image to double precision for transformations
+fd = im2double(f);
+% Result 1: Negative Transformation
+result1 = imcomplement(f);
+% Result 2: Logarithmic Transformation
+c = 1; % Scaling constant
+result2 = im2uint8(mat2gray(c * log(1 + double(f))));
+% Result 3: Power-Law (Gamma) Transformation (Gamma = 0.5)
+gamma = 0.5;
+result3 = imadjust(f, [], [], gamma);
+% Result 4: Contrast Stretching
+m = mean2(fd); % Mean intensity
+E = 4; % Exponent
+result4 = im2uint8(1 ./ (1 + (m ./ (fd + eps)).^E));
+% Display the results side by side
+figure;
+subplot(3, 2, 1), imshow(f), title('Original Image');
+subplot(3, 2, 2), imshow(result1), title('Result 1: Negative');
+subplot(3, 2, 3), imshow(result2), title('Result 2: Logarithmic');
+subplot(3, 2, 4), imshow(result3), title('Result 3: Gamma Correction');
+subplot(3, 2, 5), imshow(result4), title('Result 4: Contrast Stretching');
