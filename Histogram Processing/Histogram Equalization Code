@@ -1,0 +1,21 @@
+%========================= Histogram Processing ============================%
+
+%------------------------- Histogram Equalization --------------------------%
+
+% Read the image
+f = imread('pollen.png');
+
+% Apply histogram equalization
+h = histeq(f);
+
+% Display the original image
+subplot(2,2,1), imshow(f), title('Original Image');
+
+% Display the histogram of the original image
+subplot(2,2,2), histogram(f);
+
+% Display the histogram-equalized image
+subplot(2,2,3), imshow(h), title('Histogram-Equalized Image');
+
+% Display the histogram of the histogram-equalized image
+subplot(2,2,4), histogram(h);
