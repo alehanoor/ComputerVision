@@ -1,0 +1,26 @@
+%===================== Median, Max and Min Filters Comparison ==============%
+
+% Read the input image
+f = imread('flower.jpg');
+
+% Convert the image to grayscale if it is RGB
+if size(f, 3) == 3
+    f = rgb2gray(f);
+end
+
+% Adding noise to image
+fn = imnoise(f, 'salt & pepper', 0.2);
+
+% Apply Median Filter
+medianFiltered = medfilt2(fn);
+% Apply Max Filter
+maxFiltered = ordfilt2(fn, 9, ones(3, 3)); 
+% Apply Min Filter
+minFiltered = ordfilt2(fn, 1, ones(3, 3)); 
+
+% Display the results
+subplot(3, 2, 1), imshow(f), title('Original Image');
+subplot(3, 2, 2), imshow(fn), title('Image With Noise');
+subplot(3, 2, 3), imshow(medianFiltered), title('Median Filter');
+subplot(3, 2, 4), imshow(maxFiltered), title('Max Filter');
+subplot(3, 2, 5), imshow(minFiltered), title('Min Filter');
