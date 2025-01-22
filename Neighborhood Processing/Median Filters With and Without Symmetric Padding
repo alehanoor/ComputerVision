@@ -1,0 +1,32 @@
+%=========================== Median Filters With and Without Symmetric Padding ================%
+
+% Read the input image
+f = imread('cktboard.png'); 
+
+% Convert the image to grayscale if it's RGB
+if size(f, 3) == 3
+    f = rgb2gray(f);
+end
+
+% Add salt-and-pepper noise with a density of 0.2
+fn = imnoise(f, 'salt & pepper', 0.2);
+
+% Apply median filtering to remove noise
+Median_Filtered = medfilt2(fn); 
+
+% Apply median filtering with symmetric padding
+Median_Filtered_Symmetric = medfilt2(fn, [3 3], 'symmetric');
+
+% Display the Original image
+subplot(2, 2, 1), imshow(f), title('Original Image');
+
+% Display the Image with Salt & Pepper Noise
+subplot(2, 2, 2), imshow(fn), title('Image with Noise');
+
+% Filtered image using median filtering
+subplot(2, 2, 3), imshow(Median_Filtered);
+title('Median Filter');
+
+% Filtered image using median filter with symmetric padding
+subplot(2, 2, 4), imshow(Median_Filtered_Symmetric);
+title('Median Filter (Symmetric Padding)');
