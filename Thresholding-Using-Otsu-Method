@@ -1,0 +1,24 @@
+% Read the grayscale image
+I = imread('coins.png'); 
+
+% Display the histogram of the image
+subplot(2, 2, 1);
+imhist(I);
+title('Histogram of Image');
+
+% Compute the Otsu threshold level
+level = graythresh(I); % Determines an optimal threshold for binarization
+disp(['Threshold Level: ', num2str(level)]); % Display threshold value
+
+% Convert image to binary using the computed threshold
+BW = im2bw(I, level); 
+
+% Display the original image
+subplot(2, 2, 2); 
+imshow(I);
+title('Original Image');
+
+% Display the binarized image
+subplot(2, 2, 3); 
+imshow(BW);
+title('Binarized Image using Otsu’s Method');
