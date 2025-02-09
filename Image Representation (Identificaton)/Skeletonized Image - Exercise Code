@@ -1,0 +1,23 @@
+clc; clear; close all;
+
+% Load the image
+I = imread('skeleton.jpg.png');
+
+% Convert to grayscale if needed
+if size(I, 3) == 3
+    I = rgb2gray(I);
+end
+
+% Convert to binary (Thresholding)
+BW = imbinarize(I); 
+
+% Perform skeletonization
+skeleton = bwmorph(BW, 'skel', Inf);
+
+% Display results using subplots
+figure;
+
+% Skeletonized Image
+subplot(1, 1, 1);
+imshow(skeleton);
+title('Skeletonized Stick Figure');
