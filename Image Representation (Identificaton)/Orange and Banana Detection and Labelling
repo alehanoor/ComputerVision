@@ -1,0 +1,61 @@
+clc; clear; close all;
+
+% Load the image
+I = imread('fruit.jpg'); 
+
+% Convert to HSV color space
+I_hsv = rgb2hsv(I);
+H = I_hsv(:,:,1);
+S = I_hsv(:,:,2);
+V = I_hsv(:,:,3);
+
+% Define thresholds for orange detection
+orange_mask = (H > 0.02 & H < 0.1) & (S > 0.5) & (V > 0.5); 
+
+% Define thresholds for banana detection
+banana_mask = (H > 0.12 & H < 0.18) & (S > 0.4) & (V > 0.4);
+
+% Apply morphological closing to merge broken parts
+se = strel('disk', 10);
+banana_mask = imclose(banana_mask, se);
+
+% Remove small noise
+orange_mask = bwareaopen(orange_mask, 2000);
+banana_mask = bwareaopen(banana_mask, 5000);  % Increased for banana
+
+% Combine masks
+binary_mask = orange_mask | banana_mask;
+
+% Fill holes
+binary_mask = imfill(binary_mask, 'holes');
+
+% Label connected components
+Ilabel = bwlabel(binary_mask);
+stat = regionprops(Ilabel, 'Centroid', 'Area', 'BoundingBox');
+
+% Processed Image with Labels
+subplot(1, 1, 1);
+imshow(I);
+title('Identified Fruits');
+hold on;
+
+% Loop through detected objects
+for x = 1:numel(stat)
+    centroid = stat(x).Centroid;
+    bbox = stat(x).BoundingBox;
+
+    % Check if it's an orange or banana
+    if orange_mask(round(centroid(2)), round(centroid(1)))
+        label = 'Orange';
+    else
+        label = 'Banana';
+    end
+
+    % Draw bounding box
+    rectangle('Position', bbox, 'EdgeColor', 'r', 'LineWidth', 2);
+
+    % Label text
+    text(centroid(1), centroid(2), label, 'Color', 'y', 'FontSize', 14, 'FontWeight', 'bold');
+end
+
+hold off;
